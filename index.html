@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volu — Per-app Volume Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+          --bg: #120f23;
+          --surface: #1d1b2e;
+          --border: #2a273a;
+          --primary: #5b3efe;
+          --primary-dim: rgba(91, 62, 254, 0.12);
+          --primary-border: rgba(91, 62, 254, 0.3);
+          --text: #e8e4f8;
+          --muted: #8b85a8;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+          background: var(--bg);
+          color: var(--text);
+          font-family: 'Inter', sans-serif;
+          font-weight: 300;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* Background effects */
+        body::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          background-image:
+            linear-gradient(rgba(91,62,254,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(91,62,254,0.05) 1px, transparent 1px);
+          background-size: 64px 64px;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .glow {
+          position: fixed;
+          top: -300px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 900px;
+          height: 900px;
+          background: radial-gradient(circle, rgba(91, 62, 254, 0.15) 0%, transparent 60%);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .container {
+          position: relative;
+          z-index: 1;
+          max-width: 680px;
+          margin: 0 auto;
+          padding: 0 24px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding-top: 80px;
+          padding-bottom: 80px;
+        }
+
+        /* Icon */
+        .app-icon {
+          width: 96px;
+          height: 96px;
+          background: var(--surface);
+          border-radius: 24px;
+          border: 1px solid var(--primary-border);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 32px;
+          box-shadow: 0 0 60px rgba(91,62,254,0.2), 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .app-icon span {
+          font-size: 28px;
+          font-weight: 700;
+          color: #fff;
+          letter-spacing: -1.5px;
+        }
+
+        /* Headline */
+        .headline {
+          font-size: clamp(36px, 7vw, 56px);
+          font-weight: 700;
+          line-height: 1.1;
+          letter-spacing: -2px;
+          color: var(--text);
+          margin-bottom: 20px;
+        }
+
+        .headline span {
+          color: var(--primary);
+        }
+
+        .subline {
+          font-size: 16px;
+          font-weight: 300;
+          color: var(--muted);
+          line-height: 1.7;
+          max-width: 480px;
+          margin-bottom: 48px;
+        }
+
+        /* Play Store button */
+        .play-btn {
+          display: inline-block;
+          margin-bottom: 64px;
+          transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .play-btn:hover {
+          opacity: 0.88;
+          transform: translateY(-2px);
+        }
+
+        .play-btn img {
+          height: 72px;
+          width: auto;
+        }
+
+        /* Feature pills */
+        .features {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+          margin-bottom: 72px;
+        }
+
+        .pill {
+          background: var(--primary-dim);
+          border: 1px solid var(--primary-border);
+          border-radius: 100px;
+          padding: 6px 16px;
+          font-size: 13px;
+          font-weight: 400;
+          color: #a78bfa;
+          letter-spacing: 0.02em;
+        }
+
+        /* Divider */
+        .divider {
+          width: 100%;
+          height: 1px;
+          background: var(--border);
+          margin-bottom: 32px;
+        }
+
+        /* Footer links */
+        .footer-links {
+          display: flex;
+          gap: 32px;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .footer-links a {
+          font-size: 13px;
+          font-weight: 400;
+          color: var(--muted);
+          text-decoration: none;
+          letter-spacing: 0.02em;
+          transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+          color: var(--text);
+        }
+
+        footer {
+          position: relative;
+          z-index: 1;
+          text-align: center;
+          padding: 24px;
+          font-size: 12px;
+          color: var(--muted);
+          border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+<div class="glow"></div>
+
+<div class="container">
+    <div class="app-icon">
+        <span>Volu</span>
+    </div>
+
+    <h1 class="headline">Your audio,<br /><span>your rules.</span></h1>
+
+    <p class="subline">Per-app volume control for Android. Automatically set the perfect volume for every app the moment you open it.</p>
+
+    <a class="play-btn" href="https://play.google.com/store/apps/details?id=com.terrydroid.volu" target="_blank" rel="noopener">
+        <img
+                alt="Get it on Google Play"
+                src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" />
+    </a>
+
+    <div class="features">
+        <span class="pill">Per-app Volume</span>
+        <span class="pill">Wi-Fi Rules</span>
+        <span class="pill">Schedules</span>
+        <span class="pill">Headphones Mode</span>
+        <span class="pill">Always Mute</span>
+        <span class="pill">Quick Settings Tile</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <nav class="footer-links">
+        <a href="/privacy-policy/index.html">Privacy Policy</a>
+        <a href="/terms-and-conditions/index.html">Terms & Conditions</a>
+    </nav>
+</div>
+
+<footer>
+    © 2026 Terrydroid · Volu
+</footer>
+</body>
+</html>
