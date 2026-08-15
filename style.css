@@ -127,12 +127,13 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .phone {
   width: var(--phone-width);
   height: var(--phone-height);
+  pointer-events: auto;
   background: #000;
   border-radius: 44px;
   border: 12px solid #1a1a1a;
