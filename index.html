@@ -4,249 +4,684 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Volu — Per-app Volume Control</title>
+    <meta name="description" content="Per-app volume control for Android. Automatically set the perfect volume for every app the moment you open it." />
+    <meta name="keywords" content="Android, volume control, app volume, per-app volume, audio manager" />
+    
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Volu — Per-app Volume Control" />
+    <meta property="og:description" content="Automatically set the perfect volume for every app the moment you open it." />
+    <meta property="og:image" content="https://volu.support/assets/og-image.jpg" />
+    <meta property="twitter:card" content="summary_large_image" />
+    
+    <!-- Language Alternates -->
+    <link rel="alternate" hreflang="en" href="https://volu.support/" />
+    <link rel="alternate" hreflang="es" href="https://volu.support/es/" />
+    <link rel="alternate" hreflang="de" href="https://volu.support/de/" />
+    <link rel="alternate" hreflang="x-default" href="https://volu.support/" />
+    <link rel="canonical" href="https://volu.support/" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-        :root {
-          --bg: #120f23;
-          --surface: #1d1b2e;
-          --border: #2a273a;
-          --primary: #5b3efe;
-          --primary-dim: rgba(91, 62, 254, 0.12);
-          --primary-border: rgba(91, 62, 254, 0.3);
-          --text: #e8e4f8;
-          --muted: #8b85a8;
-        }
-
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-          background: var(--bg);
-          color: var(--text);
-          font-family: 'Inter', sans-serif;
-          font-weight: 300;
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-        }
-
-        /* Background effects */
-        body::before {
-          content: '';
-          position: fixed;
-          inset: 0;
-          background-image:
-            linear-gradient(rgba(91,62,254,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(91,62,254,0.05) 1px, transparent 1px);
-          background-size: 64px 64px;
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        .glow {
-          position: fixed;
-          top: -300px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 900px;
-          height: 900px;
-          background: radial-gradient(circle, rgba(91, 62, 254, 0.15) 0%, transparent 60%);
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        .container {
-          position: relative;
-          z-index: 1;
-          max-width: 680px;
-          margin: 0 auto;
-          padding: 0 24px;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          padding-top: 80px;
-          padding-bottom: 80px;
-        }
-
-        /* Icon */
-        .app-icon {
-          width: 96px;
-          height: 96px;
-          background: var(--surface);
-          border-radius: 24px;
-          border: 1px solid var(--primary-border);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 32px;
-          box-shadow: 0 0 60px rgba(91,62,254,0.2), 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .app-icon span {
-          font-size: 28px;
-          font-weight: 700;
-          color: #fff;
-          letter-spacing: -1.5px;
-        }
-
-        /* Headline */
-        .headline {
-          font-size: clamp(36px, 7vw, 56px);
-          font-weight: 700;
-          line-height: 1.1;
-          letter-spacing: -2px;
-          color: var(--text);
-          margin-bottom: 20px;
-        }
-
-        .headline span {
-          color: var(--primary);
-        }
-
-        .subline {
-          font-size: 16px;
-          font-weight: 300;
-          color: var(--muted);
-          line-height: 1.7;
-          max-width: 480px;
-          margin-bottom: 48px;
-        }
-
-        /* Play Store button */
-        .play-btn {
-          display: inline-block;
-          margin-bottom: 64px;
-          transition: opacity 0.2s, transform 0.2s;
-        }
-
-        .play-btn:hover {
-          opacity: 0.88;
-          transform: translateY(-2px);
-        }
-
-        .play-btn img {
-          height: 52px;
-          width: auto;
-        }
-
-        .smol-footer-badge {
-          display: inline-block;
-          margin-top: 48px;
-          transition: opacity 0.2s, transform 0.2s;
-        }
-
-        .smol-footer-badge:hover {
-          opacity: 0.88;
-          transform: translateY(-2px);
-        }
-
-        /* Feature pills */
-        .features {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 10px;
-          margin-bottom: 72px;
-        }
-
-        .pill {
-          background: var(--primary-dim);
-          border: 1px solid var(--primary-border);
-          border-radius: 100px;
-          padding: 6px 16px;
-          font-size: 13px;
-          font-weight: 400;
-          color: #a78bfa;
-          letter-spacing: 0.02em;
-        }
-
-        /* Divider */
-        .divider {
-          width: 100%;
-          height: 1px;
-          background: var(--border);
-          margin-bottom: 32px;
-        }
-
-        /* Footer links */
-        .footer-links {
-          display: flex;
-          gap: 32px;
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-
-        .footer-links a {
-          font-size: 13px;
-          font-weight: 400;
-          color: var(--muted);
-          text-decoration: none;
-          letter-spacing: 0.02em;
-          transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-          color: var(--text);
-        }
-
-        footer {
-          position: relative;
-          z-index: 1;
-          text-align: center;
-          padding: 24px;
-          font-size: 12px;
-          color: var(--muted);
-          border-top: 1px solid var(--border);
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body>
 <div class="glow"></div>
 
 <div class="container">
-    <div class="app-icon">
-        <span>Volu</span>
-    </div>
+    
+    <div class="scroll-container" id="scroll-container">
+        
+        <div class="sticky-viewport">
+            <!-- Global Scroll Indicator -->
+            <div class="scroll-indicator" id="global-scroll-indicator">
+                <span>Scroll to experience</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+            </div>
 
-    <h1 class="headline">Your audio,<br /><span>your rules.</span></h1>
+            <!-- Horizontal Track -->
+            <div class="track" id="track">
+            
+            <!-- Hero Block is the first scroll step -->
+            <div class="feature-block hero-block active" data-action="hero">
+                <div class="inner-bounds">
+                    <div class="feature-card">
+                    <h1 class="headline">Your audio,<br /><span>your rules.</span></h1>
+                    <p class="subline">Per-app volume control for Android. Automatically set the perfect volume for every app the moment you open it.</p>
+                    <div class="hero-actions">
+                        <a class="play-btn" href="https://play.google.com/store/apps/details?id=com.tdapps.volu" target="_blank" rel="noopener">
+                            <img alt="Get it on Google Play" src="google-play-badge.svg" />
+                        </a>
+                    </div>
+                    </div>
+                </div>
+            </div>
 
-    <p class="subline">Per-app volume control for Android. Automatically set the perfect volume for every app the moment you open it.</p>
+            <div class="feature-block" data-action="rules">
+                <div class="inner-bounds">
+                    <div class="feature-card">
+                    <h2><span>Rules</span>Manage App Volumes</h2>
+                    <p>Easily set specific volume levels for individual apps. Whether you want Netflix loud or Instagram quiet, Volu instantly applies your chosen volume the moment you open the app.</p>
+                    </div>
+                </div>
+            </div>
 
-    <a class="play-btn" href="https://play.google.com/store/apps/details?id=com.tdapps.volu" target="_blank" rel="noopener">
-        <img
-                alt="Get it on Google Play"
-                src="google-play-badge.svg" />
-    </a>
+            <div class="feature-block" data-action="apply">
+                <div class="inner-bounds">
+                    <div class="feature-card">
+                    <h2><span>Apply</span>Fine-tuned Control</h2>
+                    <p>Choose exactly when rules take effect. Apply them once per app switch, once per screen session, or only when conditions are met. Stay in complete control of your audio experience.</p>
+                    </div>
+                </div>
+            </div>
 
-    <div class="features">
-        <span class="pill">Per-app Volume</span>
-        <span class="pill">Wi-Fi Rules</span>
-        <span class="pill">Schedules</span>
-        <span class="pill">Headphones Mode</span>
-        <span class="pill">Always Mute</span>
-        <span class="pill">Quick Settings Tile</span>
-    </div>
+            <div class="feature-block" data-action="profiles">
+                <div class="inner-bounds">
+                    <div class="feature-card">
+                    <h2><span>Profiles</span>Contextual Sound Profiles</h2>
+                    <p>Set custom audio levels for Home, Work, or the Gym. Volu seamlessly adapts your sound when you connect to Wi-Fi, plug in headphones, start Android Auto, or follow your daily schedule.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-block" data-action="wifi">
+                <div class="inner-bounds">
+                    <div class="feature-card">
+                    <h2><span>Conditions</span>Context Aware</h2>
+                    <p>Make your rules smarter by binding them to specific Wi-Fi networks or schedules. Mute automatically at work, or turn up the volume when connected to your home network.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-block" data-action="global">
+                <div class="inner-bounds">
+                    <div class="feature-card">
+                    <h2><span>Global Rules</span>Catch-All Settings</h2>
+                    <p>Set a default behavior for all other apps. Apply a global rule when you connect to your favorite headphones or enter a specific schedule, ensuring you're never caught off guard.</p>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End track -->
+
+        <!-- Sticky Phone -->
+        <div class="visual-wrapper">
+            <div class="inner-bounds">
+                <div class="phone-container">
+                <div class="phone" id="demo-phone">
+                    <div class="phone-inner-clip">
+                        <div class="phone-screen">
+                            
+                            <!-- Top Status Bar Mock -->
+                            <div class="status-bar">
+                                <span>16:33</span>
+                                <div class="icons">
+                                    <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;"><path d="M12 21L15.6 16.2C14.6 15.4 13.4 15 12 15C10.6 15 9.4 15.4 8.4 16.2L12 21ZM12 3C7.9 3 4.2 4.6 1.4 7.2L3 9.3C5.3 7.1 8.4 5.8 12 5.8C15.6 5.8 18.7 7.1 21 9.3L22.6 7.2C19.8 4.6 16.1 3 12 3Z" fill="currentColor"/></svg>
+                                    <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;"><path d="M15.67 4H14V2H10V4H8.33C7.6 4 7 4.6 7 5.33V20.67C7 21.4 7.6 22 8.33 22H15.67C16.4 22 17 21.4 17 20.67V5.33C17 4.6 16.4 4 15.67 4Z" fill="currentColor"/></svg>
+                                </div>
+                            </div>
+
+                            <!-- Main Screen Content Area -->
+                            <div class="app-content">
+
+                                <!-- SCREEN 1: RULES -->
+                                <div class="app-screen active" id="screen-rules">
+                                    <div class="search-bar" style="background: var(--app-surface-variant); border: 1px solid var(--app-border); padding: 12px 16px; border-radius: 24px; color: var(--app-muted); font-size: 15px; display: flex; align-items: center; gap: 12px; margin: 12px 0 24px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+                                        Search apps…
+                                    </div>
+                                    
+                                    <h4 class="section-title">MANAGED APPS • 4</h4>
+                                    
+                                    <div class="app-card active-card">
+                                        <div class="app-info">
+                                            <div class="app-icon-mock square spotify">S</div>
+                                            <div class="app-text">
+                                                <h3>Spotify</h3>
+                                                <p>Set to 34% on headphones</p>
+                                            </div>
+                                        </div>
+                                        <div class="app-controls">
+                                            <div class="toggle on" id="toggle-spotify"></div>
+                                            <div class="icon-btn">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--app-accent)" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="app-card active-card" style="margin-top: 8px;">
+                                        <div class="app-info">
+                                            <div class="app-icon-mock square tiktok">T</div>
+                                            <div class="app-text">
+                                                <h3>TikTok</h3>
+                                                <p>Set to 31% on Wi-Fi</p>
+                                            </div>
+                                        </div>
+                                        <div class="app-controls">
+                                            <div class="toggle on"></div>
+                                            <div class="icon-btn">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--app-accent)" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="app-card" style="margin-top: 8px;">
+                                        <div class="app-info">
+                                            <div class="app-icon-mock square youtube">Y</div>
+                                            <div class="app-text">
+                                                <h3>YouTube</h3>
+                                                <p class="disabled">Set to 31% on headphones</p>
+                                            </div>
+                                        </div>
+                                        <div class="app-controls">
+                                            <div class="toggle"></div>
+                                            <div class="icon-btn">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="app-card" style="margin-top: 8px;">
+                                        <div class="app-info">
+                                            <div class="app-icon-mock square instagram">I</div>
+                                            <div class="app-text">
+                                                <h3>Instagram</h3>
+                                                <p class="disabled">Set to 50% always</p>
+                                            </div>
+                                        </div>
+                                        <div class="app-controls">
+                                            <div class="toggle"></div>
+                                            <div class="icon-btn">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SCREEN 2: APPLY -->
+                                <div class="app-screen" id="screen-apply">
+                                    <div style="padding-top: 10px; overflow-y: auto; height: 100%; padding-bottom: 80px;">
+                                        
+                                        <div class="app-card app-card-vertical" style="padding-bottom: 0;">
+                                            <div>
+                                                <h3 style="font-size: 14px; font-weight: 500; color: var(--app-accent);">When to apply rule</h3>
+                                                <p style="font-size: 11px; color: var(--app-muted); margin-top: 2px;">Choose when the volume rule takes effect</p>
+                                            </div>
+                                            <div style="width: 100%;">
+                                                <div class="list-item">
+                                                    <div class="list-item-text">
+                                                        <h4>Once per app switch</h4>
+                                                        <p>Apply when switching from a different app. Manual changes are kept while staying in the same app</p>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+                                                <div class="list-item">
+                                                    <div class="list-item-text">
+                                                        <h4>Once per screen session</h4>
+                                                        <p>Apply once when the screen turns on. Manual changes are kept until the screen locks again</p>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+                                                <div class="list-item" id="radio-condition">
+                                                    <div class="list-item-text">
+                                                        <h4>Once when condition met</h4>
+                                                        <p>Apply once when WiFi, headphones, or schedule conditions become active. Resets when conditions become inactive</p>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="app-card app-card-vertical" style="margin-top: 12px; padding-bottom: 0;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                                <h4 class="section-title" style="margin:0;">WIFI NETWORKS</h4>
+                                                <span style="color: var(--app-accent); font-size: 18px; line-height: 1;">+</span>
+                                            </div>
+                                            <p style="font-size: 11px; color: var(--app-muted); margin-top: -8px;">If no networks selected rule always on</p>
+                                            
+                                            <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.05); padding: 16px 0; text-align: center; color: var(--app-accent); font-size: 14px; font-weight: 500;">
+                                                + Create new WiFi network
+                                            </div>
+                                        </div>
+
+                                        <div class="app-btn-outline" style="border-color: rgba(91,62,254,0.5);">Save</div>
+                                    </div>
+                                </div>
+
+                                <!-- SCREEN 3: WIFI / SCHEDULE -->
+                                <div class="app-screen" id="screen-wifi">
+                                    <div style="padding-top: 10px;">
+                                        <div class="app-card app-card-vertical" style="margin-bottom: 12px;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                                <span class="section-title" style="margin:0;">SCHEDULES</span>
+                                                <span style="color: var(--app-accent); font-size: 18px; line-height: 1;">+</span>
+                                            </div>
+                                            <div style="width: 100%; text-align: center; margin: 16px 0; font-size: 14px; color: var(--app-muted);">
+                                                None saved yet
+                                            </div>
+                                        </div>
+
+                                        <div class="app-card app-card-vertical">
+                                            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                                <span class="section-title" style="margin:0;">WI-FI NETWORKS</span>
+                                                <span style="color: var(--app-accent); font-size: 18px; line-height: 1;">+</span>
+                                            </div>
+                                            <div style="display: flex; gap: 16px; align-items: center; width: 100%;">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--app-accent)" stroke-width="2"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+                                                <div style="flex: 1;">
+                                                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 2px;">AndroidWifi</h4>
+                                                    <p style="font-size: 12px; color: var(--app-muted);">Set rule while connected to this network</p>
+                                                </div>
+                                                <span style="color: var(--app-muted);">›</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Bottom Sheet -->
+                                    <div class="bottom-sheet" id="schedule-sheet">
+                                        <div class="sheet-handle"></div>
+                                        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px; letter-spacing: 1px;">ADD SCHEDULE</h3>
+                                        <p style="font-size: 12px; color: var(--app-muted); margin-bottom: 24px;">Rule applies during the selected time window</p>
+                                        
+                                        <h4 class="section-title" style="margin: 0 0 12px 0;">TIME RANGE</h4>
+                                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 24px;">
+                                            <div style="flex: 1; border: 1px solid var(--app-border); padding: 12px; border-radius: 12px; text-align: center;">
+                                                <div style="font-size: 11px; color: var(--app-muted);">Start</div>
+                                                <div style="font-size: 16px; font-weight: 600;">09:00</div>
+                                            </div>
+                                            <span style="color: var(--app-muted);">→</span>
+                                            <div style="flex: 1; border: 1px solid var(--app-border); padding: 12px; border-radius: 12px; text-align: center;">
+                                                <div style="font-size: 11px; color: var(--app-muted);">End</div>
+                                                <div style="font-size: 16px; font-weight: 600;">17:00</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="app-btn-outline" style="border-color: rgba(91,62,254,0.5);">Save Schedule</div>
+                                    </div>
+                                </div>
+
+                                <!-- SCREEN 4: GLOBAL RULES -->
+                                <div class="app-screen" id="screen-profiles">
+                                    <div style="padding-top: 10px; overflow-y: auto; height: 100%; padding-bottom: 80px;">
+                                        
+                                        <!-- Custom Header -->
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" opacity="0.8"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                                            <h2 style="font-size: 18px; font-weight: 600; color: white; flex: 1; margin-left: 16px;">Create Profile</h2>
+                                            <span style="font-size: 14px; color: var(--app-muted); font-weight: 500;">Save</span>
+                                        </div>
+
+                                        <!-- Input Box -->
+                                        <div class="app-card" style="margin-bottom: 16px; padding: 12px; gap: 16px;">
+                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--app-card-active); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--app-accent)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                                            </div>
+                                            <div style="flex: 1; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px;">
+                                                <span style="color: var(--app-muted); font-size: 14px;">Profile name</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Enable Toggle -->
+                                        <div class="app-card" style="margin-bottom: 16px;">
+                                            <div style="flex: 1;">
+                                                <h3 style="font-size: 14px; font-weight: 500; color: white;">Enable profile</h3>
+                                                <p style="font-size: 11px; color: var(--app-muted); margin-top: 2px;">Apply volume rules when conditions are met</p>
+                                            </div>
+                                            <div class="toggle on"></div>
+                                        </div>
+
+                                        <!-- Volume block -->
+                                        <h4 class="section-title">VOLUME</h4>
+                                        <div class="app-card app-card-vertical" style="padding: 12px;">
+                                            <div class="vol-pills" style="gap: 6px;">
+                                                <div class="vol-pill">Muted</div>
+                                                <div class="vol-pill">25%</div>
+                                                <div class="vol-pill active">50%</div>
+                                                <div class="vol-pill">75%</div>
+                                                <div class="vol-pill">Max</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- When to Apply block -->
+                                        <h4 class="section-title" style="margin-top: 16px;">WHEN TO APPLY</h4>
+                                        <div class="app-card app-card-vertical" style="padding-bottom: 0;">
+                                            <div style="width: 100%;">
+                                                
+                                                <div class="list-item" style="border: 1px solid var(--app-accent); border-radius: 12px; padding: 12px; margin-bottom: 8px;">
+                                                    <div style="display: flex; gap: 16px; align-items: center;">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                                        <div class="list-item-text">
+                                                            <h4>Always</h4>
+                                                            <p>Applies in all situations</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio selected"></div>
+                                                </div>
+
+                                                <div class="list-item">
+                                                    <div style="display: flex; gap: 16px; align-items: center;">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+                                                        <div class="list-item-text">
+                                                            <h4>On any WiFi</h4>
+                                                            <p>Only applies while connected to any WiFi</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+                                                
+                                                <div class="list-item">
+                                                    <div style="display: flex; gap: 16px; align-items: center;">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                        <div class="list-item-text">
+                                                            <h4>On schedule</h4>
+                                                            <p>Only applies during the selected time window</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+
+                                                <div class="list-item">
+                                                    <div style="display: flex; gap: 16px; align-items: center;">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                                                        <div class="list-item-text">
+                                                            <h4>On headphones</h4>
+                                                            <p>Only applies when headphones or earbuds are connected</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+                                                
+                                                <div class="list-item">
+                                                    <div style="display: flex; gap: 16px; align-items: center;">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"/><path d="M5 17L5 19"/><path d="M19 17L19 19"/><circle cx="7" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+                                                        <div class="list-item-text">
+                                                            <h4>On Android Auto</h4>
+                                                            <p>Only applies when connected to Android Auto</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+                                                
+                                                <div class="list-item">
+                                                    <div style="display: flex; gap: 16px; align-items: center;">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/></svg>
+                                                        <div class="list-item-text">
+                                                            <h4>On Bluetooth device</h4>
+                                                            <p>Only applies when the selected Bluetooth device is connected</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio"></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="app-screen" id="screen-global">
+                                    <div style="padding-top: 10px; overflow-y: auto; height: 100%; padding-bottom: 80px;">
+                                        
+                                        <div class="info-card">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--app-accent)" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                            <p>Global rules apply to all apps that don't have a specific per-app rule, when the app is brought to the foreground</p>
+                                        </div>
+
+                                        <div class="app-card" style="margin-bottom: 16px;">
+                                            <div style="flex: 1;">
+                                                <h3 style="font-size: 14px; font-weight: 500; color: var(--app-accent);">Enable Global Rule</h3>
+                                                <p style="font-size: 11px; color: var(--app-muted); margin-top: 2px;">Apply this rule to any app without a specific rule</p>
+                                            </div>
+                                            <div class="toggle on"></div>
+                                        </div>
+
+                                        <h4 class="section-title">WHEN TO APPLY</h4>
+                                        <div class="app-card app-card-vertical" style="padding-bottom: 0;">
+                                            <div style="width: 100%;">
+                                                <div class="list-item">
+                                                    <div style="display: flex; gap: 16px; align-items: center;">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                                        <div class="list-item-text">
+                                                            <h4>Always</h4>
+                                                            <p>Apply to all apps regardless of conditions</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio selected"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="section-title" style="margin-top: 16px;">VOLUME</h4>
+                                        <div class="app-card app-card-vertical" style="padding: 12px;">
+                                            <div class="vol-pills">
+                                                <div class="vol-pill">Muted</div>
+                                                <div class="vol-pill">25%</div>
+                                                <div class="vol-pill">50%</div>
+                                                <div class="vol-pill">75%</div>
+                                                <div class="vol-pill active">Max</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="app-btn-outline" style="border-color: rgba(91,62,254,0.5);">Save</div>
+                                        <div class="app-btn-outline" style="color: var(--app-red); border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.1);">Delete global rule</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Navigation -->
+                            <div class="bottom-nav">
+                                <div class="nav-item active" id="nav-apps">
+                                    <div class="nav-icon-wrapper">
+                                        <svg viewBox="0 0 960 960"><path d="M183.5,776.5Q160,753 160,720t23.5,-56.5Q207,640 240,640t56.5,23.5Q320,687 320,720t-23.5,56.5Q273,800 240,800t-56.5,-23.5ZM423.5,776.5Q400,753 400,720t23.5,-56.5Q447,640 480,640t56.5,23.5Q560,687 560,720t-23.5,56.5Q513,800 480,800t-56.5,-23.5ZM663.5,776.5Q640,753 640,720t23.5,-56.5Q687,640 720,640t56.5,23.5Q800,687 800,720t-23.5,56.5Q753,800 720,800t-56.5,-23.5ZM183.5,536.5Q160,513 160,480t23.5,-56.5Q207,400 240,400t56.5,23.5Q320,447 320,480t-23.5,56.5Q273,560 240,560t-56.5,-23.5ZM423.5,536.5Q400,513 400,480t23.5,-56.5Q447,400 480,400t56.5,23.5Q560,447 560,480t-23.5,56.5Q513,560 480,560t-56.5,-23.5ZM663.5,536.5Q640,513 640,480t23.5,-56.5Q687,400 720,400t56.5,23.5Q800,447 800,480t-23.5,56.5Q753,560 720,560t-56.5,-23.5ZM183.5,296.5Q160,273 160,240t23.5,-56.5Q207,160 240,160t56.5,23.5Q320,207 320,240t-23.5,56.5Q273,320 240,320t-56.5,-23.5ZM423.5,296.5Q400,273 400,240t23.5,-56.5Q447,160 480,160t56.5,23.5Q560,207 560,240t-23.5,56.5Q513,320 480,320t-56.5,-23.5ZM663.5,296.5Q640,273 640,240t23.5,-56.5Q687,160 720,160t56.5,23.5Q800,207 800,240t-23.5,56.5Q753,320 720,320t-56.5,-23.5Z"/></svg>
+                                    </div>
+                                    Apps
+                                </div>
+                                <div class="nav-item" id="nav-profiles">
+                                    <div class="nav-icon-wrapper">
+                                        <svg viewBox="0 0 960 960"><path d="M367,433q-47,-47 -47,-113t47,-113q47,-47 113,-47t113,47q47,47 47,113t-47,113q-47,47 -113,47t-113,-47ZM160,800v-112q0,-34 17.5,-62.5T224,582q62,-31 126,-46.5T480,520q66,0 130,15.5T736,582q29,15 46.5,43.5T800,688v112L160,800ZM240,720h480v-32q0,-11 -5.5,-20T700,654q-54,-27 -109,-40.5T480,600q-56,0 -111,13.5T260,654q-9,5 -14.5,14t-5.5,20v32ZM536.5,376.5Q560,353 560,320t-23.5,-56.5Q513,240 480,240t-56.5,23.5Q400,287 400,320t23.5,56.5Q447,400 480,400t56.5,-23.5ZM480,320ZM480,720Z"/></svg>
+                                    </div>
+                                    Profiles
+                                </div>
+                                <div class="nav-item" id="nav-cond">
+                                    <div class="nav-icon-wrapper">
+                                        <svg viewBox="0 0 960 960"><path d="M343.5,216.5Q320,193 320,160t23.5,-56.5Q367,80 400,80t56.5,23.5Q480,127 480,160t-23.5,56.5Q433,240 400,240t-56.5,-23.5ZM731,691q29,-29 29,-71t-29,-71q-29,-29 -71,-29t-71,29q-29,29 -29,71t29,71q29,29 71,29t71,-29ZM864,880 L756,772q-22,14 -46,21t-50,7q-75,0 -127.5,-52.5T480,620q0,-75 52.5,-127.5T660,440q75,0 127.5,52.5T840,620q0,26 -7,50t-21,46l108,108 -56,56ZM440,880v-121q15,24 35.5,44t44.5,36v41h-80ZM280,880v-520q-61,-5 -121,-14.5T40,320l20,-80q84,23 168.5,31.5T400,280q87,0 171.5,-8.5T740,240l20,80q-59,16 -119,25.5T520,360v41q-54,35 -87,92.5T400,620v10q0,5 1,10h-41v240h-80Z"/></svg>
+                                    </div>
+                                    Conditions
+                                </div>
+                                <div class="nav-item" id="nav-global">
+                                    <div class="nav-icon-wrapper">
+                                        <svg viewBox="0 0 960 960"><path d="M480,880q-83,0 -156,-31.5T197,763q-54,-54 -85.5,-127T80,480q0,-83 31.5,-156T197,197q54,-54 127,-85.5T480,80q83,0 156,31.5T763,197q54,54 85.5,127T880,480q0,83 -31.5,156T763,763q-54,54 -127,85.5T480,880ZM480,800q134,0 227,-93t93,-227q0,-7 -0.5,-14.5T799,453q-5,29 -27,48t-52,19h-80q-33,0 -56.5,-23.5T560,440v-40L400,400v-80q0,-33 23.5,-56.5T480,240h40q0,-23 12.5,-40.5T563,171q-20,-5 -40.5,-8t-42.5,-3q-134,0 -227,93t-93,227h200q66,0 113,47t47,113v40L400,680v110q20,5 39.5,7.5T480,800Z"/></svg>
+                                    </div>
+                                    Global Rules
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div> <!-- End visual-wrapper -->
+    </div> <!-- End sticky-viewport -->
+</div> <!-- End scroll-container -->
 
     <div class="divider"></div>
 
     <nav class="footer-links">
-        <a href="/privacy-policy/index.html">Privacy Policy</a>
-        <a href="/terms-and-conditions/index.html">Terms & Conditions</a>
+        <a href="privacy-policy/index.html">Privacy Policy</a>
+        <a href="terms-and-conditions/index.html">Terms & Conditions</a>
     </nav>
 
-    <a class="smol-footer-badge" href="https://smollaunch.com" target="_blank" rel="noopener">
-        <img src="https://smollaunch.com/badges/featured.svg" alt="Volu — Featured on Smol Launch" loading="lazy" width="250" height="60" />
-    </a>
+    <div style="text-align: center; margin-top: 32px; padding: 40px 0 60px 0;">
+        <a class="smol-footer-badge" href="https://smollaunch.com" target="_blank" rel="noopener">
+            <img src="https://smollaunch.com/badges/featured.svg" alt="Volu — Featured on Smol Launch" loading="lazy" width="250" height="60" />
+        </a>
+    </div>
 </div>
 
 <footer>
     © 2026 TD Apps · Volu
 </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const blocks = document.querySelectorAll('.feature-block');
+    const phone = document.getElementById('demo-phone');
+    const globalIndicator = document.getElementById('global-scroll-indicator');
+    const track = document.getElementById('track');
+    const scrollContainer = document.getElementById('scroll-container');
+    
+    const screens = {
+        'rules': document.getElementById('screen-rules'),
+        'apply': document.getElementById('screen-apply'),
+        'wifi': document.getElementById('screen-wifi'),
+        'profiles': document.getElementById('screen-profiles'),
+        'global': document.getElementById('screen-global')
+    };
+    
+    const nav = {
+        'rules': document.getElementById('nav-apps'),
+        'apply': document.getElementById('nav-apps'),
+        'wifi': document.getElementById('nav-cond'),
+        'profiles': document.getElementById('nav-profiles'),
+        'global': document.getElementById('nav-global')
+    };
+
+    const toggleSpotify = document.getElementById('toggle-spotify');
+    const radioCondition = document.getElementById('radio-condition')?.querySelector('.radio');
+    const scheduleSheet = document.getElementById('schedule-sheet');
+
+    let animTimeouts = [];
+    const clearAnimTimeouts = () => {
+        animTimeouts.forEach(t => clearTimeout(t));
+        animTimeouts = [];
+    };
+
+    const triggerPhoneAction = (action) => {
+        clearAnimTimeouts();
+
+        // 3D Angle vs Flat State Switch
+        if (action === 'hero') {
+            phone.classList.remove('flat');
+        } else {
+            phone.classList.add('flat');
+        }
+
+        // Activate Screen & Nav Items
+        Object.values(screens).forEach(s => s?.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+        if (action === 'hero') {
+            screens.rules?.classList.add('active');
+            nav.rules?.classList.add('active');
+            return;
+        }
+
+        if (screens[action]) screens[action].classList.add('active');
+        if (nav[action]) nav[action].classList.add('active');
+
+        // Internal Screen Micro-Animations
+        if (action === 'rules' && toggleSpotify) {
+            animTimeouts.push(setTimeout(() => toggleSpotify.classList.add('on'), 300));
+        } else if (toggleSpotify) {
+            toggleSpotify.classList.remove('on');
+        } else if (action === 'profiles') {
+            phone.classList.add('flat');
+        } else if (action === 'global') {
+            // No specific global animation
+        }
+
+        if (action === 'apply' && radioCondition) {
+            animTimeouts.push(setTimeout(() => radioCondition.classList.add('selected'), 400));
+        } else if (radioCondition) {
+            radioCondition.classList.remove('selected');
+        }
+
+        if (action === 'wifi' && scheduleSheet) {
+            animTimeouts.push(setTimeout(() => scheduleSheet.classList.add('open'), 300));
+        } else if (scheduleSheet) {
+            scheduleSheet.classList.remove('open');
+        }
+    };
+
+    // Register GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Equalize card heights so they all match the tallest card
+    function equalizeCardHeights() {
+        const cards = document.querySelectorAll('.feature-card');
+        cards.forEach(c => {
+            c.style.height = 'auto'; // Reset for measurement
+            c.style.minHeight = '0'; // Reset min-height to ensure accurate reading
+        });
+        
+        let maxHeight = 0;
+        cards.forEach(c => {
+            if (c.offsetHeight > maxHeight) {
+                maxHeight = c.offsetHeight;
+            }
+        });
+        
+        cards.forEach(c => {
+            c.style.height = maxHeight + 'px';
+        });
+    }
+    
+    equalizeCardHeights();
+    window.addEventListener('resize', equalizeCardHeights);
+
+    // Get the max scroll distance (total width of all cards minus viewport width)
+    const getScrollAmount = () => track.scrollWidth - window.innerWidth;
+
+    let activeIndex = -1;
+
+    // 1. Horizontal Scroll Animation (with pause at the end)
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: scrollContainer,
+            pin: true,
+            scrub: 1, // Smooth scrubbing
+            start: "top top",
+            end: () => "+=" + (window.innerWidth * 5.4), // 5 screens to scroll horizontally + 0.4 for a small delay
+            invalidateOnRefresh: true, // Recalculate on resize
+            onUpdate: (self) => {
+                if (globalIndicator) {
+                    globalIndicator.style.opacity = self.progress > 0.02 ? '0' : '0.6';
+                }
+                
+                // The track finishes translating at progress 5 / 5.4 (approx 92%)
+                let scrollProgress = Math.min(self.progress / (5/5.4), 1.0);
+                let rawIndex = scrollProgress * (blocks.length - 1);
+                
+                // Update the phone screen as soon as the next card crosses the 70% threshold
+                const newIndex = Math.floor(rawIndex + 0.3);
+                if (newIndex !== activeIndex) {
+                        activeIndex = newIndex;
+                        
+                        blocks.forEach(b => b.classList.remove('active'));
+                        const currentBlock = blocks[activeIndex];
+                        if (currentBlock) {
+                            currentBlock.classList.add('active');
+                            triggerPhoneAction(currentBlock.getAttribute('data-action'));
+                        }
+                    }
+            }
+        }
+    });
+
+    // Horizontal scroll takes up 5 out of 5.4 parts of the pinned scroll
+    tl.to(track, {
+        x: "-83.333333%", // Translate by 5 blocks out of 6! (5/6 = 83.333333%)
+        ease: "none",
+        duration: 5
+    })
+    // Add a short pause at the end (0.4 parts out of 4.4 parts) so it doesn't unpin immediately
+    .to({}, { duration: 0.4 });
+
+    // Trigger initial hero state
+    triggerPhoneAction('hero');
+});
+</script>
 </body>
 </html>
