@@ -296,6 +296,7 @@ body::before {
   margin-bottom: 8px;
   margin-top: 12px;
 }
+
 .info-card p {
   font-size: 12px;
   color: var(--app-text);
@@ -743,7 +744,7 @@ footer {
   .visual-wrapper .inner-bounds {
     justify-content: center;
     align-items: flex-start;
-    padding-top: 5dvh;
+    padding-top: 2dvh;
   }
   
   .phone {
@@ -913,4 +914,27 @@ footer {
   .phone.flat {
     transform: scale(0.85) rotateY(0deg) rotateX(0deg) translateZ(0px) !important;
   }
+}
+
+/* Ensure the 3D phone shrinks proportionally on short mobile screens to prevent overlapping the text cards */
+@media (max-width: 1024px) and (max-height: 850px) {
+  .visual-wrapper .inner-bounds { padding-top: 0; }
+  .phone { transform: scale(0.40) rotateY(-10deg) rotateX(4deg); }
+  .phone.flat { transform: scale(0.40) rotateY(0deg) rotateX(0deg) translateZ(0px) !important; }
+}
+
+@media (max-width: 1024px) and (max-height: 750px) {
+  .phone { transform: scale(0.36) rotateY(-10deg) rotateX(4deg); }
+  .phone.flat { transform: scale(0.36) rotateY(0deg) rotateX(0deg) translateZ(0px) !important; }
+  .feature-block h2 { font-size: 24px; }
+  .headline { font-size: 32px; }
+  .subline, .feature-card p { font-size: 14px; }
+  .feature-card { padding: 24px 20px; }
+}
+
+@media (max-width: 1024px) and (max-height: 650px) {
+  .phone { transform: scale(0.30) rotateY(-10deg) rotateX(4deg); }
+  .phone.flat { transform: scale(0.30) rotateY(0deg) rotateX(0deg) translateZ(0px) !important; }
+  .headline { font-size: 28px; }
+  .feature-card { padding: 20px 16px; }
 }
