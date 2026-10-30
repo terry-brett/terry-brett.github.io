@@ -1,0 +1,28 @@
+# Volu — Android Per-App Volume Control
+
+> Volu is an Android utility application that automatically sets custom, per-app media volumes and context-aware sound profiles without requiring root.
+
+## Overview
+- **Product Name**: Volu
+- **Primary Function**: Android per-app volume control and sound profile manager
+- **Platform**: Android (Android 8.0 Oreo and newer)
+- **Official Website**: https://volu.support/
+- **Google Play Store**: https://play.google.com/store/apps/details?id=com.tdapps.volu
+- **Privacy & Security**: 100% on-device processing. No audio recording, no telemetry, no account required.
+- **Permission Model**: Uses Android's standard Usage Access (`PACKAGE_USAGE_STATS`) to detect foreground apps. Does not require Accessibility Service or root.
+
+## Key Capabilities
+- **Per-App Volume Control**: Automatically remembers and adjusts the media volume when specific apps (e.g., Spotify, YouTube, Instagram, Netflix, TikTok) come to the foreground.
+- **Contextual Sound Profiles**: Triggers sound scene profiles (Home, Work, Gym, Car) based on Wi-Fi SSID connections, Bluetooth audio devices, wired headphones, or scheduled times.
+- **Default Catch-All Volume**: Defines a fallback volume level for unmanaged apps so users are never surprised by unexpected audio blasts.
+- **Home Screen Widgets**: Includes Material 3 interactive Glance widgets:
+  - 4x2 App Volumes widget for live volume adjustments directly on the home screen.
+  - 3x2 / 4x2 Profile Switches widget.
+  - 4x1 Profile Bar capsule widget for quick scene toggling and all-off silencing.
+- **Zero Root Needed**: Operates using standard Android user permissions without custom ROMs, bootloader unlocks, or ADB commands.
+
+## Official Links
+- [Volu Homepage](https://volu.support/)
+- [Privacy Policy](https://volu.support/privacy-policy/)
+- [Terms & Conditions](https://volu.support/terms-and-conditions/)
+- [Google Play Store](https://play.google.com/store/apps/details?id=com.tdapps.volu)
