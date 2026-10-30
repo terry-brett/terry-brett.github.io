@@ -3,25 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Volu — Your apps. Your volume. Your rules.</title>
-  <meta name="description" content="Per-app volume control for Android. Automatically set the right volume for each app, with contextual profiles and home screen widgets." />
-  <meta name="keywords" content="Android, volume control, app volume, per-app volume, audio manager, sound profiles" />
+  <title>Android Per-App Volume Control — Set Levels with Volu</title>
+  <meta name="description" content="Get true Android per-app volume control with Volu. Automatically set custom sound levels for every app and switch profiles with Wi-Fi and Bluetooth." />
+  <meta name="keywords" content="android per-app volume control, separate volume for each app android, app volume manager android, individual app volume control, android volume control widget, sound profiles" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
 
   <!-- Open Graph / Social -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Volu — Your apps. Your volume. Your rules." />
-  <meta property="og:description" content="A better volume for every app. Discover Volu’s per-app controls, contextual profiles and home screen widgets for Android." />
+  <meta property="og:title" content="Android Per-App Volume Control — Volu" />
+  <meta property="og:description" content="Get true Android per-app volume control with Volu. Automatically set custom sound levels for every app and switch profiles with Wi-Fi and Bluetooth." />
   <meta property="og:image" content="https://volu.support/assets/volu-website-hero.jpg" />
   <meta property="og:url" content="https://volu.support/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Volu — Your apps. Your volume. Your rules." />
-  <meta name="twitter:description" content="A better volume for every app. Discover Volu’s per-app controls, contextual profiles and home screen widgets for Android." />
+  <meta name="twitter:title" content="Android Per-App Volume Control — Volu" />
+  <meta name="twitter:description" content="Get true Android per-app volume control with Volu. Automatically set custom sound levels for every app and switch profiles with Wi-Fi and Bluetooth." />
   <meta name="twitter:image" content="https://volu.support/assets/volu-website-hero.jpg" />
 
   <!-- Canonical & Language Alternates -->
   <link rel="canonical" href="https://volu.support/" />
   <link rel="alternate" hreflang="en" href="https://volu.support/" />
   <link rel="alternate" hreflang="x-default" href="https://volu.support/" />
+
+  <!-- Structured Data: SoftwareApplication & FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["SoftwareApplication", "MobileApplication"],
+        "name": "Volu",
+        "operatingSystem": "Android",
+        "applicationCategory": "UtilitiesApplication",
+        "description": "Android per-app volume control. Automatically set custom sound levels for every app and switch profiles with Wi-Fi and Bluetooth.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "installUrl": "https://play.google.com/store/apps/details?id=com.tdapps.volu",
+        "image": "https://volu.support/assets/volu-website-hero.jpg",
+        "url": "https://volu.support/"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does Volu do?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Volu provides automated Android per-app volume control. It remembers your preferred sound levels for individual apps and automatically applies them whenever you open an app, preventing sudden loud bursts of sound."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does stock Android support per-app volume control?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Stock Android only provides a single global media volume slider. Volu bridges this gap by detecting which app is in the foreground and applying your preset volume automatically without requiring root."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does Volu adjust volume for each app?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Volu uses Android's standard Usage Access permission to detect when a configured app enters the foreground, instantly and smoothly setting the media stream to your desired percentage without manual adjustment."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Volu require root or ADB permissions?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Volu does not require root, custom ROMs, or ADB setup. It functions right out of the box on standard Android devices running Android 8.0+ using the standard Usage Access permission."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I trigger volume profiles with Wi-Fi or Bluetooth?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Volu allows you to bind sound profiles (such as Home, Work, Gym, or Car) to specific Wi-Fi SSIDs, Bluetooth devices, wired headphones, or time schedules."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -85,7 +160,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>
             </svg>
-            A little more control. A lot less noise.
+            Android Per-App Volume Control
           </p>
           <h1 class="hero-title">Volu<span class="dot">.</span></h1>
           <h2 class="hero-subtitle">
@@ -94,7 +169,7 @@
             <span class="dot">Your rules.</span>
           </h2>
           <p class="hero-desc">
-            Music turned up. Videos turned down. Volu automatically sets the right volume when you open each app.
+            Music turned up. Videos turned down. Volu delivers seamless Android per-app volume control, automatically applying your preferred sound levels every time you open an app.
           </p>
           <div class="hero-cta">
             <a href="https://play.google.com/store/apps/details?id=com.tdapps.volu" target="_blank" rel="noopener noreferrer" class="btn-download btn-large">
@@ -142,11 +217,11 @@
       <div class="site-container">
         <div class="section-head">
           <div>
-            <p class="section-eyebrow">LESS ADJUSTING. MORE ENJOYING.</p>
-            <h2 class="section-title">Every app has its sweet spot.</h2>
+            <p class="section-eyebrow">SMARTER AUDIO MANAGEMENT</p>
+            <h2 class="section-title">Does Android have per-app volume control?</h2>
           </div>
           <p class="section-head-desc">
-            Set it once. Let Volu take care of the volume every time you switch apps.
+            Stock Android only provides a single media slider. Volu delivers true per-app volume management, letting you set individual sound levels for games, streaming, and social media without root.
           </p>
         </div>
 
@@ -175,7 +250,7 @@
               </div>
             </div>
             <h3 class="feature-title">A volume for every app</h3>
-            <p class="feature-desc">Keep your playlists loud and your feed quiet. Give each app a volume that feels right.</p>
+            <p class="feature-desc">Keep your playlists loud and your feeds quiet. Set individual sound levels for Spotify, YouTube, Instagram, Netflix, or TikTok that apply automatically.</p>
           </article>
 
           <!-- Feature 2 -->
@@ -207,7 +282,7 @@
               </div>
             </div>
             <h3 class="feature-title">Fits wherever you are</h3>
-            <p class="feature-desc">Use Wi-Fi, Bluetooth, headphones or a schedule to decide when your volume rules apply.</p>
+            <p class="feature-desc">Create contextual sound profiles for Home, Work, or the Gym using Wi-Fi networks, Bluetooth devices, headphones, or time schedules.</p>
           </article>
 
           <!-- Feature 3 -->
@@ -234,7 +309,7 @@
               </div>
             </div>
             <h3 class="feature-title">You set the rhythm</h3>
-            <p class="feature-desc">Choose when volume changes happen, with a default volume for apps without their own rule.</p>
+            <p class="feature-desc">Choose when volume changes happen, with a customizable default catch-all volume for unmanaged apps so you're never caught off guard.</p>
           </article>
         </div>
       </div>
@@ -341,46 +416,59 @@
               </svg>
             </summary>
             <p class="faq-answer">
-              Volu sets your Android phone’s volume to your chosen level when you open an app. Create a rule for each app, then let Volu handle the adjustments automatically.
+              Volu provides automated Android per-app volume control. It remembers your preferred sound levels for individual apps and automatically applies them whenever you open an app, preventing sudden loud bursts of sound.
             </p>
           </details>
 
           <!-- FAQ Item 2 -->
           <details class="faq-item" name="faq">
             <summary class="faq-summary">
-              <span>Can I use different rules at home and at work?</span>
+              <span>Does stock Android support per-app volume control?</span>
               <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </summary>
             <p class="faq-answer">
-              Yes. Profiles let you group settings for places and situations like Home, Work and the Gym. Use Wi-Fi, connected devices or schedules to decide when rules take effect.
+              No. Stock Android only provides a single global media volume slider. Volu bridges this gap by detecting which app is in the foreground and applying your preset volume automatically without requiring root.
             </p>
           </details>
 
           <!-- FAQ Item 3 -->
           <details class="faq-item" name="faq">
             <summary class="faq-summary">
-              <span>What happens to apps without a volume rule?</span>
+              <span>How does Volu adjust volume for each app?</span>
               <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </summary>
             <p class="faq-answer">
-              Default volume settings let you choose the behavior for apps that don’t have their own per-app rule.
+              Volu uses Android's standard Usage Access permission to detect when a configured app enters the foreground, instantly and smoothly setting the media stream to your desired percentage without manual adjustment.
             </p>
           </details>
 
           <!-- FAQ Item 4 -->
           <details class="faq-item" name="faq">
             <summary class="faq-summary">
-              <span>When will the volume change?</span>
+              <span>Does Volu require root or ADB permissions?</span>
               <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </summary>
             <p class="faq-answer">
-              You can choose to apply a rule each time you switch to an app, once per screen session, or when its triggers are met.
+              No. Volu does not require root, custom ROMs, or ADB setup. It functions right out of the box on standard Android devices running Android 8.0+ using the standard Usage Access permission.
+            </p>
+          </details>
+
+          <!-- FAQ Item 5 -->
+          <details class="faq-item" name="faq">
+            <summary class="faq-summary">
+              <span>Can I trigger volume profiles with Wi-Fi or Bluetooth?</span>
+              <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <p class="faq-answer">
+              Yes. Volu allows you to bind sound profiles (such as Home, Work, Gym, or Car) to specific Wi-Fi SSIDs, Bluetooth devices, wired headphones, or time schedules.
             </p>
           </details>
         </div>
