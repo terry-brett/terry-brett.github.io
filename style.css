@@ -411,18 +411,26 @@ button {
   .hero-media {
     position: static;
     width: 100%;
-    max-width: 320px;
-    margin: 24px auto 0;
+    max-width: 340px;
+    margin: 28px auto 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     order: 2;
+  }
+  .hero-media picture {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
   .hero-image {
     width: 100%;
+    max-width: 260px;
     height: auto;
-    max-height: 280px;
+    max-height: 320px;
     object-fit: contain;
     object-position: center;
+    margin-inline: auto;
     -webkit-mask-image: none;
     mask-image: none;
   }
