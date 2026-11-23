@@ -612,8 +612,8 @@
         </div>
         <div class="price-card">
           <p class="price-label">Volu for Android</p>
-          <p class="price-amount"><span class="price-currency">£</span>0.79</p>
-          <p class="price-note">One-time purchase</p>
+          <p class="price-amount"><span class="price-value" id="priceAmount"><span class="price-currency">£</span>0.79</span><span class="price-tax">+ local tax</span></p>
+          <p class="price-note" id="priceNote">One-time purchase</p>
           <ul class="price-list">
             <li>Per-app volume control</li>
             <li>Wi-Fi, Bluetooth &amp; schedule profiles</li>
@@ -941,6 +941,129 @@
     renderAppsWidget();
     renderProfilesWidget();
     renderProfileBarWidget();
+
+    // ----------------------------------------------------
+    // Localized Pricing (0.79 GBP -> visitor currency)
+    // ----------------------------------------------------
+    (function initLocalizedPrice() {
+      const BASE_GBP = 0.79;
+      const amountEl = document.getElementById('priceAmount');
+      const noteEl = document.getElementById('priceNote');
+      if (!amountEl || !noteEl) return;
+
+      const tzToCurrency = {
+        'Europe/London': 'GBP', 'Europe/Belfast': 'GBP', 'Europe/Guernsey': 'GBP',
+        'Europe/Jersey': 'GBP', 'Europe/Isle_of_Man': 'GBP',
+        'Europe/Dublin': 'EUR', 'Europe/Paris': 'EUR', 'Europe/Berlin': 'EUR',
+        'Europe/Madrid': 'EUR', 'Europe/Rome': 'EUR', 'Europe/Lisbon': 'EUR',
+        'Europe/Amsterdam': 'EUR', 'Europe/Brussels': 'EUR', 'Europe/Vienna': 'EUR',
+        'Europe/Athens': 'EUR', 'Europe/Helsinki': 'EUR', 'Europe/Luxembourg': 'EUR',
+        'Europe/Malta': 'EUR', 'Europe/Nicosia': 'EUR', 'Europe/Riga': 'EUR',
+        'Europe/Tallinn': 'EUR', 'Europe/Vilnius': 'EUR', 'Europe/Bratislava': 'EUR',
+        'Europe/Ljubljana': 'EUR', 'Europe/Zagreb': 'EUR', 'Atlantic/Canary': 'EUR',
+        'Atlantic/Madeira': 'EUR', 'Atlantic/Azores': 'EUR',
+        'Europe/Oslo': 'NOK', 'Europe/Stockholm': 'SEK', 'Europe/Copenhagen': 'DKK',
+        'Europe/Zurich': 'CHF', 'Europe/Warsaw': 'PLN', 'Europe/Prague': 'CZK',
+        'Europe/Budapest': 'HUF', 'Europe/Bucharest': 'RON', 'Europe/Sofia': 'BGN',
+        'Europe/Istanbul': 'TRY', 'Europe/Kyiv': 'UAH', 'Europe/Kiev': 'UAH',
+        'America/New_York': 'USD', 'America/Chicago': 'USD', 'America/Denver': 'USD',
+        'America/Los_Angeles': 'USD', 'America/Phoenix': 'USD', 'America/Anchorage': 'USD',
+        'Pacific/Honolulu': 'USD', 'America/Detroit': 'USD', 'America/Indiana/Indianapolis': 'USD',
+        'America/Toronto': 'CAD', 'America/Vancouver': 'CAD', 'America/Edmonton': 'CAD',
+        'America/Winnipeg': 'CAD', 'America/Halifax': 'CAD', 'America/St_Johns': 'CAD',
+        'America/Mexico_City': 'MXN', 'America/Monterrey': 'MXN', 'America/Cancun': 'MXN',
+        'America/Sao_Paulo': 'BRL', 'America/Fortaleza': 'BRL', 'America/Manaus': 'BRL',
+        'America/Argentina/Buenos_Aires': 'ARS', 'America/Santiago': 'CLP', 'America/Bogota': 'COP',
+        'Australia/Sydney': 'AUD', 'Australia/Melbourne': 'AUD', 'Australia/Brisbane': 'AUD',
+        'Australia/Perth': 'AUD', 'Australia/Adelaide': 'AUD', 'Australia/Hobart': 'AUD',
+        'Pacific/Auckland': 'NZD',
+        'Asia/Kolkata': 'INR', 'Asia/Calcutta': 'INR', 'Asia/Bangkok': 'THB',
+        'Asia/Tokyo': 'JPY', 'Asia/Seoul': 'KRW', 'Asia/Singapore': 'SGD',
+        'Asia/Kuala_Lumpur': 'MYR', 'Asia/Jakarta': 'IDR', 'Asia/Manila': 'PHP',
+        'Asia/Ho_Chi_Minh': 'VND', 'Asia/Saigon': 'VND', 'Asia/Hong_Kong': 'HKD',
+        'Asia/Taipei': 'TWD', 'Asia/Dubai': 'AED', 'Asia/Riyadh': 'SAR',
+        'Asia/Jerusalem': 'ILS', 'Africa/Johannesburg': 'ZAR'
+      };
+
+      const regionToCurrency = {
+        GB: 'GBP', UK: 'GBP', US: 'USD', CA: 'CAD', AU: 'AUD', NZ: 'NZD',
+        NO: 'NOK', SE: 'SEK', DK: 'DKK', CH: 'CHF', PL: 'PLN', CZ: 'CZK',
+        HU: 'HUF', RO: 'RON', BG: 'BGN', TR: 'TRY', UA: 'UAH', IN: 'INR',
+        TH: 'THB', JP: 'JPY', KR: 'KRW', SG: 'SGD', MY: 'MYR', ID: 'IDR',
+        PH: 'PHP', VN: 'VND', HK: 'HKD', TW: 'TWD', BR: 'BRL', MX: 'MXN',
+        AR: 'ARS', CL: 'CLP', CO: 'COP', ZA: 'ZAR', AE: 'AED', SA: 'SAR', IL: 'ILS',
+        DE: 'EUR', FR: 'EUR', ES: 'EUR', IT: 'EUR', PT: 'EUR', NL: 'EUR',
+        BE: 'EUR', AT: 'EUR', IE: 'EUR', FI: 'EUR', GR: 'EUR', LU: 'EUR',
+        SK: 'EUR', SI: 'EUR', HR: 'EUR', EE: 'EUR', LV: 'EUR', LT: 'EUR', MT: 'EUR', CY: 'EUR'
+      };
+
+      function detectCurrency() {
+        try {
+          const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          if (tz && tzToCurrency[tz]) return tzToCurrency[tz];
+        } catch (e) {}
+
+        const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+        for (const lang of langs) {
+          const parts = lang.split(/[-_]/);
+          if (parts.length > 1) {
+            const region = parts[parts.length - 1].toUpperCase();
+            if (regionToCurrency[region]) return regionToCurrency[region];
+          }
+        }
+        return 'GBP';
+      }
+
+      const targetCurrency = detectCurrency();
+      if (!targetCurrency || targetCurrency === 'GBP') return;
+
+      const ZERO_DECIMAL = new Set(['JPY', 'KRW', 'VND', 'IDR', 'CLP', 'HUF']);
+
+      function renderConverted(rate) {
+        const value = BASE_GBP * rate;
+        const maxFrac = ZERO_DECIMAL.has(targetCurrency) ? 0 : 2;
+        try {
+          const formatter = new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency: targetCurrency,
+            currencyDisplay: 'narrowSymbol',
+            minimumFractionDigits: maxFrac,
+            maximumFractionDigits: maxFrac
+          });
+          const parts = formatter.formatToParts(value);
+          amountEl.innerHTML = parts.map(part => {
+            if (part.type === 'currency') {
+              return `<span class="price-currency">${part.value}</span>`;
+            }
+            if (part.type === 'literal') return part.value.trim();
+            return part.value;
+          }).join('');
+          noteEl.textContent = 'One-time purchase · approx. from £0.79';
+        } catch (e) {}
+      }
+
+      const CACHE_KEY = 'volu_gbp_rates_v1';
+      const CACHE_TTL = 24 * 60 * 60 * 1000;
+
+      try {
+        const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+        if (cached && cached.rates && cached.rates[targetCurrency] && (Date.now() - cached.ts < CACHE_TTL)) {
+          renderConverted(cached.rates[targetCurrency]);
+          return;
+        }
+      } catch (e) {}
+
+      fetch('https://open.er-api.com/v6/latest/GBP')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (!data || data.result !== 'success' || !data.rates || !data.rates[targetCurrency]) return;
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: data.rates }));
+          } catch (e) {}
+          renderConverted(data.rates[targetCurrency]);
+        })
+        .catch(() => {});
+    })();
   </script>
 </body>
 </html>
