@@ -1063,6 +1063,131 @@ button {
 }
 
 /* ==========================================================================
+   Reviews Section (Google Play Blootrue Widget)
+   ========================================================================== */
+
+.reviews-band {
+  background-color: var(--secondary-container);
+  border-bottom: 1px solid var(--border);
+}
+
+.reviews-widget-wrap {
+  margin-top: 40px;
+}
+
+/* ==========================================================================
+   Pricing Section
+   ========================================================================== */
+
+.pricing-band {
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border);
+}
+
+.pricing-grid {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px;
+  }
+}
+
+.pricing-desc {
+  margin-top: 16px;
+}
+
+.price-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 40px 36px;
+  box-shadow: 0 16px 40px rgba(28, 26, 36, 0.06);
+  width: 100%;
+  max-width: 440px;
+  justify-self: end;
+}
+
+@media (max-width: 767px) {
+  .price-card {
+    padding: 32px 24px;
+    max-width: 100%;
+    justify-self: stretch;
+  }
+}
+
+.price-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--on-surface-variant);
+}
+
+.price-amount {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  margin-top: 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.price-currency {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.price-note {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  margin-top: 6px;
+}
+
+.price-list {
+  list-style: none;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.price-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--foreground);
+}
+
+.price-list li::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--primary-container);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235b3efe' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.price-btn {
+  width: 100%;
+  margin-top: 32px;
+}
+
+/* ==========================================================================
    Questions Section (Accordion)
    ========================================================================== */
 
